@@ -1,8 +1,11 @@
 require 'win32ole'
 
+#
+# Class to run raw sql style queries on excel spreadsheet
+#
 class Querier
   def initialize(message_database)
-    puts message_database
+    #puts message_database
     @connection = WIN32OLE.new('ADODB.Connection')
     @conn_string =  'Provider=Microsoft.Jet.OLEDB.4.0;'
     @conn_string << 'Data Source='+message_database

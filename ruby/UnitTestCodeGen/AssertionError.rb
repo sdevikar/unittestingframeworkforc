@@ -1,3 +1,6 @@
+################################################################
+# Class that provides API for throwing a runtime assertion error
+################################################################
 class AssertionError < RuntimeError
 end
 

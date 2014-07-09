@@ -1,15 +1,21 @@
+###############################################################
+# A class dedicated to parsing a C language function signature
+###############################################################
 class FunctionSignature
 
-  signature = nil
+  @signature = nil
+  @result = nil
+  
   def initialize(signature)
     @signature = signature
+    @result = parse()
   end
 
   ##################################################
-  # parses signature to return an array as follows 
-  # result[0]     => return value                  
-  # result[1]     => method name                   
-  # result[2..n]  => method arguments              
+  # parses signature to return an array as follows
+  # result[0]     => return value
+  # result[1]     => method name
+  # result[2..n]  => method arguments
   ##################################################
   def parse
     temp_signature = String.new(@signature)
@@ -32,7 +38,8 @@ class FunctionSignature
       temp = temp[1].split('(')
       result[1] = temp[0]
 
-      #extract arguments enclosed in ()
+      #extract arguments enclosed in () 
+      # NOTE: More work required to parse arguments containing argument names as well
       startIndex = temp_signature.index('(')+1
       endIndex = temp_signature.index(')')-1
       temp = temp_signature[startIndex..endIndex].split(',')
@@ -48,37 +55,49 @@ class FunctionSignature
   end
 
   ####################################################################
-  # Returns the return value from the function signature             
+  # Returns the return value from the function signature
   ####################################################################
-  def return_value
-    temp = @signature.lstrip.split
-    if temp[1].start_with?"*"
-      result = temp[0].concat("*")
-    end
-    return result
+  def return_type
+    return @result[0]
   end
 
   ####################################################################
-  # Returns true if the function has a return value. false otherwise 
+  # Returns true if the function returns void. false otherwise
   ####################################################################
-  def has_return_value?
-    ret_val = return_value
-    if ret_val.match("void")
-      return false
-    else return true
+  def returns_void?
+    ret_val = return_type()
+    
+    if ret_val.downcase.match("void")
+      return true
+    else return false
     end
   end
-  
+
   ####################################################################
-  # returns number of parameters in a function
+  # returns number of parameters declared in function signature
   ####################################################################
-  
   def parameter_count
-    ret_val = 0
-    result = parse
-    unless result.last.eql?("void")
-    ret_val = result.length - 2
-    end
-    return ret_val
+    return @result.length
   end
+
+  #####################################################################
+  # Returns an array of parameters declared in the function signature
+  #####################################################################
+  def parameters
+    params = nil
+    count = parameter_count
+    if count > 0
+      params =  @result[2..count-1]
+    end
+    return params
+  end
+  
+  ####################################################################
+  # Returns the name of the function in function signature
+  ####################################################################
+  def name
+    return @result[1]
+  end
+
+  private :parse
 end

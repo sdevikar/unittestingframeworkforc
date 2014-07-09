@@ -11,19 +11,13 @@ my_function5 = "BYTE *fc_xmcyclic(void *)"
 
 signature = FunctionSignature.new(my_function5)
 
-result =  signature.parse
+puts signature.return_type()
 
-for i in 0..result.length
-  puts result[i]
-end
-
-puts "*****"
-
-puts signature.return_value()
-
-puts signature.has_return_value?()
+puts signature.returns_void?()
 
 puts signature.parameter_count()
+
+puts signature.parameters()
 
 #puts parser.parse(my_function2)
 #puts parser.parse(my_function3)
@@ -31,9 +25,10 @@ puts signature.parameter_count()
 
 
 
-reader = SpreadSheetReader.new('C:\Users\sdevikar\Desktop\ruby script for autogenerating unit test code\Unit testing template.xls')
+#reader = SpreadSheetReader.new('C:\Users\sdevikar\Desktop\ruby script for autogenerating unit test code\Unit testing template.xls')
 
-puts reader.get_function_signature
+#puts reader.get_function_signature
+
 #
 #columns = reader.get_datatypes_description()
 #
@@ -59,7 +54,7 @@ puts reader.get_function_signature
 #puts "Names record:"
 #puts reader.get_names_description()
 
-
+=begin
 puts "Global variable values:"
 map =  reader.get_global_values()
 map.each_key{|key| puts key+"==>"
@@ -83,3 +78,4 @@ puts reader.get_expected_return_values().to_s
 
 puts "Number of test cases:"
 puts reader.get_test_case_count()
+=end

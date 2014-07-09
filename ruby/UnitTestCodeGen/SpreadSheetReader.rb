@@ -2,6 +2,10 @@ require_relative 'querier'
 require_relative 'configuration'
 require_relative 'assertionerror'
 
+##################################################################################
+# Class that provides APIs to read various test parameters from excel spreadsheet
+# in a specified format
+##################################################################################
 class SpreadSheetReader
 
   @querier = nil
@@ -11,12 +15,10 @@ class SpreadSheetReader
   @kind = []
   @datatypes =[]
   @names= []
-  
-  
   #############################################################################################
   # Class constructor - Initializes querier, which is responsible for querying the spreadsheet
-  # and pre-processes spreadsheet to populate a bunch of arrays that contain metadata about 
-  # test matrix 
+  # and pre-processes spreadsheet to populate a bunch of arrays that contain metadata about
+  # test matrix
   #############################################################################################
   def initialize path
     unless path.end_with?(";")
@@ -47,7 +49,7 @@ class SpreadSheetReader
   def get_test_case_count
     return @entire_test_matrix[0].length
   end
-  
+
   ##################################################################################
   # Reads the function signature from the spreadheet
   ##################################################################################
@@ -56,7 +58,7 @@ class SpreadSheetReader
     @querier.open_connection()
     data =  @querier.get(query)
     @querier.close_connection()
-    return data
+    return data.flatten[0]
   end
 
   ##################################################################################
@@ -74,7 +76,8 @@ class SpreadSheetReader
   end
 
   ##################################################################################
-  # Returns a map of global names as keys and the array of values they take as value
+  # Returns a hashmap of global names as keys and the array of values they take as 
+  # value
   ##################################################################################
   def get_global_values
     globals_hash = Hash.new
@@ -97,7 +100,8 @@ class SpreadSheetReader
   end
 
   #####################################################################################
-  # Returns a map of parameter names as keys and the array of values they take as value
+  # Returns a hashmap of parameter names as keys and the array of values they take as 
+  # value
   #####################################################################################
   def get_parameters_values
     params_hash = Hash.new
@@ -113,40 +117,26 @@ class SpreadSheetReader
   def get_temp_test_var_datatypes
 
     query = "SELECT DATATYPE FROM [TEMP_TEST_VAR$]"
-    temp_datatypes = []
+    return get_temp_var_data(query)
+  end
 
-    @querier.open_connection()
-    temp_datatypes =  @querier.get(query)
-    @querier.close_connection()
+  ########################################################################################
+  # Returns an array of temp variable names
+  ########################################################################################
+  def get_temp_test_var_names
 
-    temp_datatypes.flatten!
-    temp_datatypes.compact!
-    temp_datatypes.each{|element|
-      element.gsub!(" ", "")
-    }
-    return temp_datatypes
+    query = "SELECT NAME FROM [TEMP_TEST_VAR$]"
+    return get_temp_var_data(query)
   end
 
   ########################################################################################
   # Returns an array of temp variable values
   ########################################################################################
   def get_temp_test_var_values
-
-    temp_values = []
-
+    
     query = "SELECT VALUE FROM [TEMP_TEST_VAR$]"
-
-    @querier.open_connection()
-    temp_values =  @querier.get(query)
-    @querier.close_connection()
-
-    temp_values.flatten!
-    temp_values.compact!
-    temp_values.each{|element|
-      element.gsub!(" ", "")
-    }
-
-    return temp_values
+    return get_temp_var_data(query)
+    
   end
 
   ##################################################################################
@@ -155,7 +145,7 @@ class SpreadSheetReader
   def get_expected_return_datatype
     retval = []
     @kind.each_index{|index|
-      if @kind[index].match(Configuration.returnvalue_tag)
+      if @kind[index].match(Configuration.expected_returnvalue_tag)
         retval.push(@datatypes[index])
       end
     }
@@ -169,8 +159,8 @@ class SpreadSheetReader
   def get_expected_return_values
     retval_hash = Hash.new
     retvals = []
-      
-    create_hash(retval_hash, Configuration.returnvalue_tag)
+
+    create_hash(retval_hash, Configuration.expected_returnvalue_tag)
     retvals = retval_hash.flatten
     retvals.slice!(0)
     retvals.flatten!
@@ -276,6 +266,26 @@ class SpreadSheetReader
 
     }
   end
+
+  #
+  #
+  #
+  def get_temp_var_data(query)
+
+    temp = []
+
+    @querier.open_connection()
+    temp =  @querier.get(query)
+    @querier.close_connection()
+
+    temp.flatten!
+    temp.compact!
+    temp.each{|element|
+      element.gsub!(" ", "")
+    }
+    return temp
+  end
+
   ############################################################################
   # Private instance members
   ############################################################################
@@ -285,6 +295,6 @@ class SpreadSheetReader
   private :get_names_description
   private :trim
   private :create_hash
-  
+  private :get_temp_var_data
 
 end
