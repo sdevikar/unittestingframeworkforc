@@ -18,16 +18,16 @@
 
 /* Parameter type */
 /* e.g. #define PARAM1_TYPE                 SXI_STATUS_IND_STRUCT */
-<PARAM_TYPE_DEFINES>
+<PARAM_TYPE_MACRO_DEFINES>
 
 /* Global types */
-<GLOBAL_TYPE_DEFINES>
+<GLOBAL_TYPE_MACRO_DEFINES>
 
 /* Number of test cases */
 #define MAX_NUM_TEST_CASES          (<NUM_TEST_CASES>)
 
 /* Function under test metadata */
-#define PTR_TO_FUNC_UNDER_TEST      <RETURN_TYPE> (*fptr)(<FUNCTION_ARGUMENTS_CSV>)
+#define PTR_TO_FUNC_UNDER_TEST      <RETURN_TYPE> (*fptr)(<FUNCTION_ARGUMENT_TYPES_CSV>)
 #define FUNC_UNDER_TEST             <FUNCTION_NAME>
 
 /*****************************************************/

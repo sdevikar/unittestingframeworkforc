@@ -18,17 +18,18 @@ ST_TEST_INPUTS st_arr_test_inputs[MAX_NUM_TEST_CASES] =
 {    
     <TEST_DATA_IN_MATRIX_INITIALIZATION>
 /* e.g.    
-    {
-        &FUNC_UNDER_TEST,
-        {
-                0,
-                0,
-                0,
-                0,
-                SXI_MONITOR_SIGNAL_STATUS,
-                SXI_SIG_STRENGTH_GOOD
-        }
-    }
+		&FUNC_UNDER_TEST, // Pointer to the function under test
+		"arg_1__string_value", // argument 1 - string type
+		arg2_int_value, // argument 2 - int type
+		{
+			arg3_structure_member_1_int_value
+			arg3_structure_member_2_int_value
+			"arg3_structure_member_3_string_value"
+		}, // and this is how you would initialize a structure as an argument
+		&temp_variable_1, // this is how temps will be used if needed
+		
+		"global_random_string", // a global string variable used by function under test
+		0 //a global flag used by the function
 */
 };
 
