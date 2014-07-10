@@ -34,7 +34,6 @@ void fc_test_exec()
     /* TODO - Declare local variables for function parameters */
     /* e.g. PARAM1_TYPE arg1; */
     PARAM_0_TYPE	arg0;
-	PARAM_1_TYPE	arg1;
 	
 
 
@@ -53,12 +52,8 @@ void fc_test_exec()
 
         /* TODO- populate the function arguments */
         /* e.g. arg1 = st_arr_test_inputs[index].arg1; */
-        arg0 = st_arr_test_inputs[0].arg0;
-		arg1 = st_arr_test_inputs[1].arg1;
-		
-
-
-
+        arg0 = st_arr_test_inputs[index].arg0;
+	
         
 #if __RET_TYP_NOT_VOID__
         expected_res = st_arr_test_inputs[index].ret_val;
@@ -66,7 +61,7 @@ void fc_test_exec()
         if(NULL != st_arr_test_inputs[index].fptr)
         {
             /* TODO - Edit following line to pass all arguments to the function */
-            actual_res = st_arr_test_inputs[index].fptr(arg0, arg1);
+            actual_res = st_arr_test_inputs[index].fptr(arg0);
 
             process_result(expected_res, actual_res, index);
         }
@@ -80,7 +75,7 @@ void fc_test_exec()
         {
 
             /* TODO - Edit following line to pass all arguments to the function */
-            st_arr_test_inputs[index].fptr(arg0, arg1);
+            st_arr_test_inputs[index].fptr(arg0);
         }
         else
         {
@@ -104,9 +99,7 @@ static void set_global_vars(BYTE index)
     /* for example:  */
     /* bf_xxx_yyy_zzz_1 = st_arr_test_inputs[index].global_var_1 */
     /* memcpy(&Cat_Lab[0], st_arr_test_inputs[index].global_typ1, st_arr_test_inputs[index].arg2);*/
-    z = st_arr_test_inputs[index].global_typ0;
-	w = st_arr_test_inputs[index].global_typ1;
-	
+    
 
 
 }

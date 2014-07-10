@@ -225,8 +225,8 @@ class ScriptGenerator
           result.concat(token.gsub(Configuration.delimiter, index.to_s)).concat(";\n").concat("\t");
         }
       end
-      return result
     }
+    return result
   end
 
   ###########################################################################################
@@ -305,8 +305,42 @@ class ScriptGenerator
   #############################################################################################
   def validate_initializations
     #TODO - Write null check / size check logic here
+    
+    # make sure that there are no nils
+    assert {@function_return_type != nil}
+    assert {@function_name != nil}
+    assert {@function_argument_types_string != nil}
+    assert {@function_argument_types_array != nil}
+    assert {@global_types_array != nil}
+    assert {@is_ret_type_not_void != nil}
+    assert {@number_of_test_cases != nil}
+    assert {@temp_var_types_array != nil}
+    assert {@temp_var_names_array != nil}
+    assert {@temp_var_values_array != nil}
+    assert {@parameters_hashmap != nil}
+    assert {@globals_hashmap != nil}
+    assert {@return_values != nil}
+    
+    #make sure that the table for temporary variables was properly filled  
     assert{@temp_var_types_array.length == @temp_var_names_array.length}
     assert{@temp_var_types_array.length == @temp_var_values_array.length}
+      
+    #make sure that the table for test matrix was properly filled
+    unless @number_of_test_cases == 0
+      
+      #check that all values are entered for all parameters for each test case
+      @parameters_hashmap.each_pair{|key, value|
+        assert{@number_of_test_cases == value.length}
+      }
+      
+      # check that all values are entered for all global variables for each test case
+      @globals_hashmap.each_pair{|key, value|
+        assert{@number_of_test_cases == value.length}
+      }      
+    end
+    
+    # check if all return values have been entered
+    assert { @number_of_test_cases == @return_values.length }
   end
 
   #############################################################################################
@@ -321,7 +355,7 @@ class ScriptGenerator
   # unit test code
   #############################################################################################
   def get_initialized_parameters_string(parameters)
-    token = "arg"+Configuration.delimiter+" = st_arr_test_inputs["+Configuration.delimiter+"].arg"+Configuration.delimiter+";\n"    
+    token = "arg"+Configuration.delimiter+" = st_arr_test_inputs[index].arg"+Configuration.delimiter+";\n"    
     return get_initialization_strings_for(parameters.length, token)
   end
   
